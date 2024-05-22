@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SectionTitle from "../../../SectionTitle/SectionTitle";
-import { useEffect } from "react";
 import MenuCard from "./MenuCard/MenuCard";
 import { Link } from "react-router-dom";
-
+import axios from 'axios'
 
 const Menu = () => {
 
     const [menuData, setMenuData] = useState([]);
 
     useEffect(() => {
-        fetch('/public/menu.json')
-            .then(res => res.json())
-            .then(data => setMenuData(data))
+        axios.get('http://localhost:5000/menus')
+            .then((response) => {
+                console.log(response)
+                setMenuData(response.data)
+            })
     }, [])
-
 
     return (
         <div>

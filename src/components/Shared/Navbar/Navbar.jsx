@@ -1,17 +1,31 @@
 import { Link, NavLink } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-
+import { FaCartPlus } from "react-icons/fa";
 import { Popover, Position, Menu, PeopleIcon, Button } from 'evergreen-ui'
-
+import { useContext } from "react";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
+import useCarts from '../../Hooks/useCarts'
 
 const Navbar = () => {
+
+    const { user, logOutUser } = useContext(AuthContext)
+    const [carts] = useCarts()
+
+    const handleLogOut = () => {
+        logOutUser()
+            .then(() => {
+                // Sign-out successful.
+            }).catch(() => {
+                // An error happened.
+            });
+    }
 
     const links = <>
         <li>
             <NavLink
                 to="/"
                 className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500" : ""
+                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
             >
                 HOME
@@ -21,7 +35,7 @@ const Navbar = () => {
             <NavLink
                 to="/contactus"
                 className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500" : ""
+                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
             >
                 CONTACTUS
@@ -31,7 +45,7 @@ const Navbar = () => {
             <NavLink
                 to="/dashbord"
                 className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500" : ""
+                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
             >
                 DASHBORD
@@ -41,7 +55,7 @@ const Navbar = () => {
             <NavLink
                 to="/"
                 className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500" : ""
+                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
             >
                 OUR MENU
@@ -51,10 +65,18 @@ const Navbar = () => {
             <NavLink
                 to="/ourShop"
                 className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500" : ""
+                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
             >
-                OUR SHOP
+                <>
+                    <div className="indicator">
+                        <span className="indicator-item badge badge-neutral">+ {carts.length}</span>
+                        <span className="flex">
+                            <span className="p-1">OUR SHOP </span>
+                            <span><FaCartPlus className="text-2xl mt-2" /></span>
+                        </span>
+                    </div>
+                </>
             </NavLink>
         </li>
     </>
@@ -81,31 +103,46 @@ const Navbar = () => {
                         {links}
                     </ul>
 
-
                     <div>
-                        <Popover
-                            position={Position.BOTTOM_LEFT}
-                            content={
-                                <Menu>
-                                    <Menu.Group>
-                                        <Menu.Item icon={PeopleIcon}>
-                                            <Link to='/login'>
-                                                <button>Login</button>
-                                            </Link>
-                                        </Menu.Item>
-                                        <Menu.Item icon={PeopleIcon}>
-                                            <Link to='/registration'>
-                                                <button>Registration</button>
-                                            </Link>
-                                        </Menu.Item>
-                                    </Menu.Group>
-                                </Menu>
+
+                        <div>
+                            {
+                                user ? <>
+                                    <button
+                                        onClick={handleLogOut}
+                                        className="btn btn-outline bg-yellow-500 border-0 border-b-4">Log Out</button>
+                                </>
+                                    :
+                                    <>
+                                        <Popover
+                                            position={Position.BOTTOM_LEFT}
+                                            content={
+                                                <Menu>
+                                                    <Menu.Group>
+                                                        <Menu.Item icon={PeopleIcon}>
+                                                            <Link to='/login'>
+                                                                <button>Login</button>
+                                                            </Link>
+                                                        </Menu.Item>
+                                                        <Menu.Item icon={PeopleIcon}>
+                                                            <Link to='/registration'>
+                                                                <button>Registration</button>
+                                                            </Link>
+                                                        </Menu.Item>
+                                                    </Menu.Group>
+                                                </Menu>
+                                            }
+                                        >
+                                            <Button className="flex item-center bg-blue-900" marginRight={16}>
+                                                <CgProfile className="text-3xl ms-3" />
+                                            </Button>
+                                        </Popover>
+                                    </>
                             }
-                        >
-                            <Button className="flex item-center" marginRight={16}>
-                                <CgProfile className="text-3xl ms-3" />
-                            </Button>
-                        </Popover>
+                        </div>
+
+
+
                     </div>
 
                 </div>

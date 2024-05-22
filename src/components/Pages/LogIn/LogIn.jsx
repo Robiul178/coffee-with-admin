@@ -29,7 +29,7 @@ const LogIn = () => {
     }
 
     return (
-        <section className='flex py-24 p-22'>
+        <section className='flex py-24 p-22 '>
 
             <div className='w-[700px]'>
                 <form
