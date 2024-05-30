@@ -7,7 +7,7 @@ import TabPannel from './TabPannel/TabPannel';
 
 const OurShop = () => {
 
-    const menu = UseMenu();
+    const [menu] = UseMenu();
 
     const saladItem = menu.filter(item => item.category == 'salad')
     const pizzaItem = menu.filter(item => item.category == 'pizza')

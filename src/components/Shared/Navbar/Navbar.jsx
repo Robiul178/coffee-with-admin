@@ -43,17 +43,7 @@ const Navbar = () => {
         </li>
         <li>
             <NavLink
-                to="/dashbord"
-                className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
-                }
-            >
-                DASHBORD
-            </NavLink>
-        </li>
-        <li>
-            <NavLink
-                to="/"
+                to="/menu"
                 className={({ isActive, isPending }) =>
                     isPending ? "pending" : isActive ? "border border-green-500 text-yellow-400" : ""
                 }
@@ -77,6 +67,17 @@ const Navbar = () => {
                         </span>
                     </div>
                 </>
+            </NavLink>
+        </li>
+
+        <li>
+            <NavLink
+                to="/dashboard"
+                className={({ isActive, isPending }) =>
+                    isPending ? "pending" : isActive ? "" : ""
+                }
+            >
+                DASHBORD
             </NavLink>
         </li>
     </>
@@ -104,47 +105,41 @@ const Navbar = () => {
                     </ul>
 
                     <div>
-
-                        <div>
-                            {
-                                user ? <>
-                                    <button
-                                        onClick={handleLogOut}
-                                        className="btn btn-outline bg-yellow-500 border-0 border-b-4">Log Out</button>
+                        {
+                            user ? <>
+                                <button
+                                    onClick={handleLogOut}
+                                    className="btn btn-outline bg-yellow-500 border-0 border-b-4">Log Out
+                                </button>
+                            </>
+                                :
+                                <>
+                                    <Popover
+                                        position={Position.BOTTOM_LEFT}
+                                        content={
+                                            <Menu>
+                                                <Menu.Group>
+                                                    <Menu.Item icon={PeopleIcon}>
+                                                        <Link to='/login'>
+                                                            <button>Login</button>
+                                                        </Link>
+                                                    </Menu.Item>
+                                                    <Menu.Item icon={PeopleIcon}>
+                                                        <Link to='/registration'>
+                                                            <button>Registration</button>
+                                                        </Link>
+                                                    </Menu.Item>
+                                                </Menu.Group>
+                                            </Menu>
+                                        }
+                                    >
+                                        <Button className="flex item-center bg-blue-900" marginRight={16}>
+                                            <CgProfile className="text-3xl ms-3" />
+                                        </Button>
+                                    </Popover>
                                 </>
-                                    :
-                                    <>
-                                        <Popover
-                                            position={Position.BOTTOM_LEFT}
-                                            content={
-                                                <Menu>
-                                                    <Menu.Group>
-                                                        <Menu.Item icon={PeopleIcon}>
-                                                            <Link to='/login'>
-                                                                <button>Login</button>
-                                                            </Link>
-                                                        </Menu.Item>
-                                                        <Menu.Item icon={PeopleIcon}>
-                                                            <Link to='/registration'>
-                                                                <button>Registration</button>
-                                                            </Link>
-                                                        </Menu.Item>
-                                                    </Menu.Group>
-                                                </Menu>
-                                            }
-                                        >
-                                            <Button className="flex item-center bg-blue-900" marginRight={16}>
-                                                <CgProfile className="text-3xl ms-3" />
-                                            </Button>
-                                        </Popover>
-                                    </>
-                            }
-                        </div>
-
-
-
+                        }
                     </div>
-
                 </div>
             </div>
         </div>

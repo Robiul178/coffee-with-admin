@@ -1,20 +1,12 @@
-import { useEffect, useState } from "react";
+
 import SectionTitle from "../../../SectionTitle/SectionTitle";
 import MenuCard from "./MenuCard/MenuCard";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import UseMenu from "../../../Hooks/UseMenu";
 
 const Menu = () => {
 
-    const [menuData, setMenuData] = useState([]);
-
-    useEffect(() => {
-        axios.get('http://localhost:5000/menus')
-            .then((response) => {
-                console.log(response)
-                setMenuData(response.data)
-            })
-    }, [])
+    const [menus] = UseMenu();
 
     return (
         <div>
@@ -26,7 +18,7 @@ const Menu = () => {
             <section className="py-22">
                 <div className=" grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-8">
                     {
-                        menuData.slice(0, 6).map(menu => <MenuCard
+                        menus.slice(0, 6).map(menu => <MenuCard
 
                             key={menu._id}
                             menu={menu}></MenuCard>)

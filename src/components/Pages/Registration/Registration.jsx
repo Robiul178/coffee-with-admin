@@ -2,42 +2,69 @@ import img from '../../../assets/others/authentication2.png'
 import { useForm } from "react-hook-form"
 import { AuthContext } from '../../AuthProvider/AuthProvider';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const Registration = () => {
-    const { register, handleSubmit, formState: { errors }, } = useForm();
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm();
+    const navigate = useNavigate()
+    const { createUser, updateUserProfile, googleLogIn } = useContext(AuthContext)
 
-    const { createUser } = useContext(AuthContext)
+    const axiosSecure = useAxiosSecure()
+
 
     const onSubmit = data => {
-        // const name = data.name;
-        const email = data.email;
-        const password = data.password;
+        createUser(data.email, data.password)
+            .then(result => {
+                const loggedUser = result.user;
+                console.log(loggedUser);
+                updateUserProfile(data.name, data.photoURL)
+                    .then(() => {
+                        // create user entry in the database
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        axiosSecure.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    // console.log('user added to the database')
+                                    reset();
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'User created successfully.',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    navigate('/');
+                                }
+                            })
 
-        console.log(email, password)
 
-        createUser(email, password)
-            .then((userCredential) => {
-                // Signed up 
-                const user = userCredential.user;
-                if (user) {
-                    alert.success('user Create Successfully')
-                }
+                    })
+                    .catch(error => console.log(error))
             })
-            .catch((error) => {
-                console.log(error)
-            });
+    };
+
+    const handleGoogleSingIn = () => {
+        googleLogIn()
+            .then(result => {
+                console.log(result.user)
+                const userInfo2 = {
+                    name: result.user.displayName,
+                    email: result.user.email
+                }
+                console.log(userInfo2)
+                axiosSecure.post('/users', userInfo2)
+                    .then(res => {
+                        console.log(res.data)
+                        navigate('/');
+                    })
+            })
+
     }
-
-    // const handleSingUp = (e) => {
-    //     e.preventDefault()
-
-    //     const form = new FormData(e.target)
-    //     const name = form.get('name')
-    //     const email = form.get('email')
-    //     const password = form.get('password')
-
-    //     console.log(name, email, password)
-    // }
 
     return (
         <section className='flex py-24 p-22'>
@@ -73,6 +100,13 @@ const Registration = () => {
                         <button type='submit' className="btn btn-outline border-0 border-b-4">Sing Up</button>
                     </div>
                 </form>
+                <div>
+                    <button
+                        onClick={handleGoogleSingIn}
+                    >
+                        Google Sing In
+                    </button>
+                </div>
             </div>
             <div className='w-full'>
                 <img src={img} />
